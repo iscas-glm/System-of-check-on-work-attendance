@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>随机点名系统</title>
+    <style>
+        body {
+            background: #3ba1c4;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+        }
+        
+        #btn {
+            width: 100px;
+            height: 30px;
+            background: #fff;
+            border-radius: 5px;
+            margin-left: 1150px;
+            margin-top: 50px;
+        }
+        
+        .name {
+            width: 100px;
+            height: 40px;
+            float: left;
+            background: antiquewhite;
+            margin-left: 10px;
+            margin-top: 10px;
+            text-align: center;
+            line-height: 40px;
+        }
+        
+        .box {
+            width: 1000px;
+            height: 240px;
+            margin: 100px auto 0;
+            clear: both;
+        }
+        
+        #span {
+            float: right;
+            position: relative;
+            top: 50px;
+            right: 270px;
+			color: white;
+			
+        }
+		.txt-center{
+		color:red;
+		float: right;
+		position: relative;
+		top: 40px;
+		right: 270px;
+		color: white;
+		}
+    </style>
+
+	
+</head>
+
+<body>
+    <h1>随机点名系统V1.0</h1>
+    <span id='span' ,color='orange'>233</span>
+    <div class="box" id="box"></div>
+    <input type="button" id="btn" value="点名">
+	<div class="txt-center"><a href="https://blog.csdn.net/weixin_43798170">Copyright © 菱形继承. All Rights Reserved</a></div>
+	<audio autoplay="autoplay">
+	<source src="未闻花名.mp3"/></audio>
+</body>
+
+</html>
+
+<script>
+	<!--<bgsound src="未闻花名.mp3" autostart=true loop="-1" />-->
+    var arrs = ["胡子潇", "郭立敏", "郑涵琪", "林枫", "张宇", "黄俊尧", "许彦妮", "郑益源", "张玉斌", "代浪", "彭琼", "林振凯", "张加辉",
+        "孙鑫炎", "何妍", "张妍", "庄震丰", "宋宗宝", "李天正", "倪姜越", "王丽瑾", "郑祎航", "陈月雨", "余子祥", "林国豪", "孙玮琳", "向文芳",
+        "王颖颖", "吕尤", "郑希颖", "白松原", "周宗涛", "林雅岚", "汪楷星", "钟淇越", "张晶瑾", "何思宣", "龚子玉", "翁昊亮", "徐惠三", "林毓灵",
+        "蔡俊贤", "廖奕洋", "林正昊", "梁智飞"
+    ]
+	var vis=new Array(45),pro=new Array(45),sum=0,exp=2.718281828;
+	for(var i=0;i<vis.length;i++)vis[i]=0,pro[i]=1.0/45,sum+=pro[i];
+    var boxNode = document.querySelector('#box');
+    for (var i = 0; i < arrs.length; i++) {
+        var divNode = document.createElement('div');
+        divNode.innerHTML = arrs[i];
+        divNode.className = 'name';
+        boxNode.appendChild(divNode);
+    }
+    var btn = document.getElementById('btn');
+    var timeID, cnt = 0,random,check,tep = 0,cof=0.2,last=0,interval=0.05*arrs.length;
+    btn.onclick = function() {
+        if (this.value == "点名") {
+            timeID = setInterval(function() {
+				
+				if (cnt == 15) {
+					
+                    
+					for (var i = 0; i < arrs.length; i++) 
+					{
+						if(boxNode.children[i].style.background == 'red')
+						{
+							random=i;break;
+						}
+					}
+					tep=parseInt(Math.random() * arrs.length);
+					if(tep>random*cof)window.alert(arrs[random]+"  正常出勤!");
+					else
+					{
+						
+						if(last-vis[random]*interval<=random&&last+interval*vis[random]>=random&&last)
+						{	
+							vis[last]++;
+							var ans=2*interval*vis[last]/arrs.length;
+							ans=ans*100;
+							if(vis[last]>=3)window.alert(arrs[random]+" 你已无故缺勤3次，给予你此门课的挂科警告!");
+							else window.alert(arrs[random]+" 无故未到,下次被点名的概率增加了,当前被点中概率为"+ans+"%");
+						}
+						else 
+						{	
+							vis[random]++;
+							var ans=1.0/45;
+							for(var i=0;i<vis[random];i++)ans=ans*exp;
+							ans=ans+(Math.random()*0.1*ans);
+							ans=ans*100;
+							if(vis[random]>=3)window.alert(arrs[random]+" 你已无故缺勤3次，给予你此门课的挂科警告!"+ans+"%");
+							else window.alert(arrs[random]+" 无故未到,当前被点中概率为"+ans+"%");
+						}
+						last=random;
+					}
+                    cnt = 0;
+					
+					clearInterval(timeID);
+                }
+				random = parseInt(Math.random() * arrs.length);
+                for (var i = 0; i < arrs.length; i++) boxNode.children[i].style.background = '';  
+                boxNode.children[random].style.background = 'red';
+                cnt++;	
+            }, 100)
+        }
+    }
+    var span = document.querySelector("#span");
+    getTime();
+    setInterval(getTime, 1000);
+
+    function getTime() {
+        var day = new Date;
+        var year = day.getFullYear();
+        var month = day.getMonth() + 1;
+        var dat = day.getDate();
+        var hour = day.getHours();
+        var mit = day.getMinutes();
+        var sec = day.getSeconds();
+        span.innerHTML = "Current Time:" + ' ' + year + '.' + month + '.' + dat + ' ' + hour + ':' + mit + ':' + sec;
+    }
+</script>
+
+
+
+
